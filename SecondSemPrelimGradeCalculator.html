@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2nd Semester Prelim Grade Calculator</title>
+    <style>
+        body {
+            background-image: url("bg1.png");
+            background-size: auto; 
+            background-repeat: repeat;
+            background-position: center;
+            font-family: 'Verdana', Tahoma, Geneva, Arial;
+            color: #d11a8b;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            font-size: large;
+        }
+
+        .container {
+            display: flex;
+            margin-top: 10px;
+            gap: 6%;
+            width: 95%;
+        }
+
+        .panel {
+            width: 50%;
+            padding: 20px;
+            background-color: #ff8fd3;
+            color: #d11a8b;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(104, 99, 99, 0.1);
+            border: 4px solid #270513;
+            font-weight: bold;
+        }
+
+        .panel p {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            text-align: center;
+            color: #270513;
+        }
+
+        input[type="number"] {
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid #d11a8b;
+            color: white; /* Change font color to white */
+            font-size: 16px;
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center; /* Center the text */
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-bottom: 2px solid #270513;
+        }
+
+        button {
+            background-color: #E6EAF0;
+            color: #000000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #f063a0;
+            color: #E6EAF0;
+            font-weight: bold;
+        }
+
+        h1:hover {
+            color: #270513;
+            transition: color 0.3s ease-out;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 0%;
+        }
+
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 5px; /* Add some space between the columns */
+        }
+
+        .attendance-grid label {
+            display: block; /* Make labels block-level for proper grid layout */
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center; /* Center the buttons horizontally */
+            gap: 10px; /* Add some space between the buttons */
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            background-image: url("bg1.png"); /* Add your background image here */
+            background-size: cover; /* Cover the entire popup */
+            background-position: center; /* Center the background image */
+        }
+
+        .popup-content {
+            text-align: center; /* Center the image */
+        }
+
+        .popup-content img {
+            max-width: 100%; /* Make the image responsive */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+<h1>PRELIM GRADE COMPUTATIONS</h1>
+
+<div class="container">
+    <div class="panel" id="lecturePanel">
+        <h2>PROGRAMMING 2 - LECTURE</h2>
+        <p>60% Prelim Exam</p>
+        Prelim Examination (100 points): <input type="number" id="lectureExam"><br>
+        <p>60% Prelim Quizzes</p>
+        Quiz 1 - Essay (100 points): <input type="number" id="lectureEssay"><br>
+        Quiz 2 - PVM (60 points): <input type="number" id="lecturePVM"><br>
+        Quiz 3 - Java Basics (40 points): <input type="number" id="lectureJavaBasics"><br>
+        Quiz 4 - Intro to JS (40 points): <input type="number" id="lectureIntroJS"><br>
+        <p>40% Attendance</p>
+        <div id="lectureAttendance" class="attendance-grid">
+            <label><input type="checkbox" id="lectureAttendance_2025-01-20">January 20, 2025</label>
+            <label><input type="checkbox" id="lectureAttendance_2025-02-10">February 10, 2025</label>
+            <label><input type="checkbox" id="lectureAttendance_2025-01-27">January 27, 2025</label>
+            <label><input type="checkbox" id="lectureAttendance_2025-02-17">February 17, 2025</label>
+            <label><input type="checkbox" id="lectureAttendance_2025-02-03">February 03, 2025</label>
+        </div>
+
+        <div class="button-container">
+            <button onclick="calculateLectureGrade()">Prelim Grade</button>
+            <button onclick="showLectureFormula()">Grade Formula</button>
+        </div>
+        <div id="lectureFormulaPopup" class="popup">
+            <div class="popup-content">
+                <img id="lectureFormulaImage" src="" alt="Lecture Formula">
+            </div>
+            <button onclick="hideLectureFormula()">Close</button>
+        </div>
+        <div id="lectureGradePopup" class="popup">
+            <div class="popup-content">
+                <p id="lectureGradeText"></p>
+            </div>
+            <button onclick="hideLectureGrade()">Close</button>
+        </div>
+    </div>
+
+    <div class="panel" id="labPanel">
+        <h2>PROGRAMMING 2 - LABORATORY</h2>
+        <p>60% Prelim Exam</p>
+        Java 1 (100 points): <input type="number" id="labJava1"><br>
+        Java 2 (100 points): <input type="number" id="labJava2"><br>
+        JavaScript 1 (100 points): <input type="number" id="labJS1"><br>
+        JavaScript 2 (100 points): <input type="number" id="labJS2"><br>
+        <p>60% Lab Work</p>
+        MP1 (100 points): <input type="number" id="labMP1"><br>
+        MP2 (100 points): <input type="number" id="labMP2"><br>
+        MP3 (100 points): <input type="number" id="labMP3"><br>
+        MP3 Documentation (100 points): <input type="number" id="labMPDock"><br>
+        <p>40% Attendance</p>
+        <div id="labAttendance" class="attendance-grid">
+            <label><input type="checkbox" id="labAttendance_2025-01-20">January 20, 2025</label>
+            <label><input type="checkbox" id="labAttendance_2025-02-10">February 10, 2025</label>
+            <label><input type="checkbox" id="labAttendance_2025-01-27">January 27, 2025</label>
+            <label><input type="checkbox" id="labAttendance_2025-02-17">February 17, 2025</label>
+            <label><input type="checkbox" id="labAttendance_2025-02-03">February 03, 2025</label>
+        </div>
+        
+        <div class="button-container">
+            <button onclick="calculateLabGrade()">Prelim Grade</button>
+            <button onclick="showLabFormula()">Grade Formula</button>
+        </div>
+        <div id="labFormulaPopup" class="popup">
+            <div class="popup-content">
+                <img id="labFormulaImage" src="" alt="Lab Formula">
+            </div>
+            <button onclick="hideLabFormula()">Close</button>
+        </div>
+        <div id="labGradePopup" class="popup">
+            <div class="popup-content">
+                <p id="labGradeText"></p>
+            </div>
+            <button onclick="hideLabGrade()">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getValidatedInput(input, min, max, fieldName) {
+        const value = parseFloat(input);
+        if (isNaN(value)) {
+            alert("Please enter a valid number for " + fieldName + ".");
+            return null;
+        }
+        if (value < min) {
+            alert(fieldName + " cannot be less than " + min + ".");
+            return null;
+        }
+        if (value > max) {
+            alert(fieldName + " cannot exceed " + max + ".");
+            return null;
+        }
+        return value;
+    }
+
+    function calculateLectureGrade() {
+        const lectureExam = getValidatedInput(document.getElementById("lectureExam").value, 0, 100, "Prelim Examination");
+        const essay = getValidatedInput(document.getElementById("lectureEssay").value, 0, 100, "Quiz 1 - Essay");
+        const pvm = getValidatedInput(document.getElementById("lecturePVM").value, 0, 60, "Quiz 2 - PVM");
+        const javaBasics = getValidatedInput(document.getElementById("lectureJavaBasics").value, 0, 40, "Quiz 3 - Java Basics");
+        const introJS = getValidatedInput(document.getElementById("lectureIntroJS").value, 0, 40, "Quiz 4 - Intro to JS");
+
+        if (lectureExam !== null && essay !== null && pvm !== null && javaBasics !== null && introJS !== null) {
+            const essayPercentage = (essay / 100) * 100;
+            const pvmPercentage = (pvm / 60) * 100;
+            const javaBasicsPercentage = (javaBasics / 40) * 100;
+            const introToJSPercentage = (introJS / 40) * 100;
+
+            const prelimQuizzes = (essayPercentage + pvmPercentage + javaBasicsPercentage + introToJSPercentage) / 4;
+
+            // Calculate Lecture Attendance
+            const lectureAttendanceDiv = document.getElementById("lectureAttendance");
+            const lectureCheckboxes = lectureAttendanceDiv.querySelectorAll('input[type="checkbox"]');
+            let lectureAbsences = 0;
+            lectureCheckboxes.forEach(checkbox => {
+                if (!checkbox.checked) {
+                    lectureAbsences++;
+                }
+            });
+            const attendance = Math.max(100 - (lectureAbsences * 10), 0);
+
+            const prelimClassStanding = (0.6 * prelimQuizzes) + (0.4 * attendance);
+            const prelimGrade = (0.6 * lectureExam) + (0.4 * prelimClassStanding);
+
+            // Show grade in a pop-up
+            document.getElementById("lectureGradeText").innerText = "Lecture Prelim Grade: " + prelimGrade.toFixed(2);
+            document.getElementById("lectureGradePopup").style.display = "block";
+        }
+    }
+
+    function calculateLabGrade() {
+        const labJava1 = getValidatedInput(document.getElementById("labJava1").value, 0, 100, "Java 1");
+        const labJava2 = getValidatedInput(document.getElementById("labJava2").value, 0, 100, "Java 2");
+        const labJS1 = getValidatedInput(document.getElementById("labJS1").value, 0, 100, "JavaScript 1");
+        const labJS2 = getValidatedInput(document.getElementById("labJS2").value, 0, 100, "JavaScript 2");
+        const labMP1 = getValidatedInput(document.getElementById("labMP1").value, 0, 100, "MP1");
+        const labMP2 = getValidatedInput(document.getElementById("labMP2").value, 0, 100, "MP2");
+        const labMP3 = getValidatedInput(document.getElementById("labMP3").value, 0, 100, "MP3");
+        const labMPDock = getValidatedInput(document.getElementById("labMPDock").value, 0, 100, "MP3 Documentation");
+
+        if (labJava1 !== null && labJava2 !== null && labJS1 !== null && labJS2 !== null &&
+            labMP1 !== null && labMP2 !== null && labMP3 !== null && labMPDock !== null) {
+
+            const prelimExam = (0.2 * labJava1) + (0.3 * labJava2) + (0.2 * labJS1) + (0.3 * labJS2);
+            const labWork = (labMP1 + labMP2 + labMP3 + labMPDock) / 4.0;
+
+            // Calculate Lab Attendance
+            const labAttendanceDiv = document.getElementById("labAttendance");
+            const labCheckboxes = labAttendanceDiv.querySelectorAll('input[type="checkbox"]');
+            let labAbsences = 0;
+            labCheckboxes.forEach(checkbox => {
+                if (!checkbox.checked) {
+                    labAbsences++;
+                }
+            });
+            const labAttendance = Math.max(0, 100 - (labAbsences * 10));
+
+            const prelimClassStanding = (0.6 * labWork) + (0.4 * labAttendance);
+            const prelimGrade = (0.6 * prelimExam) + (0.4 * prelimClassStanding);
+
+            // Show grade in a pop-up
+            document.getElementById("labGradeText").innerText = "Lab Prelim Grade: " + prelimGrade.toFixed(2);
+            document.getElementById("labGradePopup").style.display = "block";
+        }
+    }
+
+    function showLectureFormula() {
+        const lectureFormulaPopup = document.getElementById("lectureFormulaPopup");
+        const lectureFormulaImage = document.getElementById("lectureFormulaImage");
+        lectureFormulaImage.src = "lecture_formula.png"; // Replace with your image file name
+        lectureFormulaPopup.style.display = "block";
+    }
+
+    function hideLectureFormula() {
+        document.getElementById("lectureFormulaPopup").style.display = "none";
+    }
+
+    function showLabFormula() {
+        const labFormulaPopup = document.getElementById("labFormulaPopup");
+        const labFormulaImage = document.getElementById("labFormulaImage");
+        labFormulaImage.src = "lab_formula.png"; // Replace with your image file name
+        labFormulaPopup.style.display = "block";
+    }
+
+    function hideLabFormula() {
+        document.getElementById("labFormulaPopup").style.display = "none";
+    }
+
+    function hideLectureGrade() {
+        document.getElementById("lectureGradePopup").style.display = "none";
+    }
+
+    function hideLabGrade() {
+        document.getElementById("labGradePopup").style.display = "none";
+    }
+</script>
+
+</body>
+</html>
